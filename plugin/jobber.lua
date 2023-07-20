@@ -1,5 +1,4 @@
-require("jobber").register_layouts({})
+local jobber = require("jobber")
+vim.api.nvim_create_user_command("Jobber", jobber.pick_layout, {})
 
-vim.api.nvim_create_user_command("Jobber", function()
-	require("jobber").pick_layout()
-end, {})
+vim.api.nvim_create_user_command("JobberKill", jobber.kill, {})

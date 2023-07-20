@@ -28,15 +28,15 @@ function M.create_term(win, cmd)
 	vim.api.nvim_set_current_win(win)
 	t:open()
 	local buf = vim.api.nvim_win_get_buf(win)
-	-- vim.api.nvim_buf_set_option(buf, "readonly", true)
-	-- vim.api.nvim_buf_set_option(buf, "modified", false)
-	-- vim.api.nvim_buf_set_option(buf, "modifiable", false)
+	vim.api.nvim_buf_set_option(buf, "readonly", true)
+	vim.api.nvim_buf_set_option(buf, "modified", false)
+	vim.api.nvim_buf_set_option(buf, "modifiable", false)
 	return t
 end
 
 function M.create_layout(layout)
 	vim.cmd([[tabnew]])
-	local terms = {}
+	M.terms = {}
 	for i, v in ipairs(layout) do
 		if i > 1 then
 			vim.cmd([[vsplit]])
@@ -44,7 +44,7 @@ function M.create_layout(layout)
 
 		-- create a new term and get reference to it
 		local win = vim.api.nvim_get_current_win()
-		table.insert(terms, M.create_term(win, v))
+		table.insert(M.terms, M.create_term(win, v))
 	end
 end
 
@@ -65,12 +65,19 @@ end
 
 function M.register_layouts(layouts)
 	M.layouts = {}
-	for k, v in pairs({
-		["Layout 1"] = { "pwd", "ls" },
-		["Layout 2"] = { "ping 8.8.8.8", "ping 127.0.0.1", "make --version" },
-	}) do
+	for k, v in pairs(layouts) do
 		M.layouts[k] = v
 	end
+end
+
+function M.kill()
+	for _, term in ipairs(M.terms) do
+		term:kill()
+	end
+end
+
+function M.setup(opts)
+	M.register_layouts(opts.layouts)
 end
 
 return M
