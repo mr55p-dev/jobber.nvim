@@ -46,6 +46,7 @@ function M.create_layout(layout)
 		local win = vim.api.nvim_get_current_win()
 		table.insert(M.terms, M.create_term(win, v))
 	end
+	vim.cmd[[stopinsert]]
 end
 
 function M.pick_layout()
